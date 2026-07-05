@@ -18,11 +18,19 @@ window.addEventListener('scroll', () => {
     lastScrollY = currentScrollY;
 });
 
-// Password visibility toggle
+// Password visibility toggle - prevents interfering with input operations
 const togglePassword = document.getElementById('togglePassword');
 const passwordInput = document.getElementById('password');
 
-togglePassword.addEventListener('click', function() {
+// Prevent mousedown from stealing focus from password input
+togglePassword.addEventListener('mousedown', function(e) {
+    e.preventDefault(); // Prevents the button from taking focus
+});
+
+togglePassword.addEventListener('click', function(e) {
+    e.stopPropagation(); // Stop event from bubbling up
+    passwordInput.focus(); // Keep focus on the password input
+    
     // Toggle the type attribute
     const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
     passwordInput.setAttribute('type', type);
@@ -155,19 +163,12 @@ authForm.addEventListener('submit', async function(e) {
     submitBtn.disabled = true;
     
     try {
-        // Sign in with Firebase
+        // Sign in with Firebase (compat syntax)
         await auth.signInWithEmailAndPassword(email, password);
         
-        // Success
-        submitBtn.textContent = 'Success!';
-        submitBtn.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
-        showSuccess('Login successful! Redirecting...');
-        
-        // Redirect or handle successful login
-        setTimeout(() => {
-            // You can replace this with your dashboard URL
-            window.location.href = '/dashboard.html';
-        }, 1500);
+        // Success - redirect immediately to dashboard
+        console.log('Login successful! Redirecting to dashboard...');
+        window.location.href = 'dashboard.html';
         
     } catch (error) {
         console.error('Login error:', error);
