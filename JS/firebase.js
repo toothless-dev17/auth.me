@@ -16,12 +16,13 @@ let analytics;
 
 try {
   app = firebase.initializeApp(firebaseConfig);
-  auth = firebase.auth(app);
-  analytics = firebase.analytics(app);
+  auth = firebase.auth();
+  analytics = firebase.analytics();
   
   // Export auth instance for use in other scripts
   window.firebaseAuth = auth;
   console.log('Firebase initialized successfully with your project: bloomsky-techno');
+  console.log('Auth instance created:', auth);
 } catch (error) {
   console.error('Firebase initialization error:', error);
 }

@@ -25,8 +25,15 @@ const authForm = document.getElementById('authForm');
 const forgotPasswordLink = document.querySelector('.forgot-password');
 const submitBtn = document.querySelector('.login-btn');
 
-// Get auth instance from firebase.js
-const auth = window.firebaseAuth;
+// Get auth instance - ensure it's available
+let auth;
+if (window.firebaseAuth) {
+    auth = window.firebaseAuth;
+} else {
+    // Fallback to directly accessing firebase auth
+    auth = firebase.auth();
+}
+console.log('Index.js - Using auth instance:', auth);
 
 // Show error message to user
 function showError(message) {
@@ -109,7 +116,7 @@ authForm.addEventListener('submit', async function(e) {
     const existingMsg = document.querySelector('.success-message, .error-message');
     if (existingMsg) existingMsg.remove();
     
-    const email = document.getElementById('username').value.trim();
+    const email = document.getElementById('email').value.trim();
     const password = document.getElementById('password').value;
     
     // Basic validation
@@ -118,8 +125,13 @@ authForm.addEventListener('submit', async function(e) {
         return;
     }
     
+    // Debug: Log auth status
+    console.log('Firebase auth instance:', auth);
+    console.log('Attempting login with:', email);
+    
     // Check if Firebase auth is available
     if (!auth) {
+        console.error('Firebase auth is not initialized!');
         showError('Firebase is not configured. Please check your configuration.');
         return;
     }
@@ -138,32 +150,55 @@ authForm.addEventListener('submit', async function(e) {
         window.location.href = 'dashboard.html';
         
     } catch (error) {
-        console.error('Login error:', error);
+        // Detailed error logging for debugging
+        console.error('Full login error object:', error);
+        console.error('Error code:', error.code);
+        console.error('Error message:', error.message);
+        
         resetButton();
         
-        // Handle all authentication errors with custom message
-        if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
-            // Show the exact message requested for invalid credentials
+        // Handle all authentication errors with proper logging
+        if (error.code === 'auth/user-not-found') {
+            console.log('ERROR: No user found with this email');
+            showError('Invalid Username or Password try again');
+        } else if (error.code === 'auth/wrong-password') {
+            console.log('ERROR: Incorrect password provided');
             showError('Invalid Username or Password try again');
         } else if (error.code === 'auth/network-request-failed') {
+            console.log('ERROR: Network connection issue');
             showError('Network error. Check your internet connection.');
+        } else if (error.code === 'auth/invalid-email') {
+            console.log('ERROR: Invalid email format');
+            showError('Please enter a valid email address');
+        } else if (error.code === 'auth/user-disabled') {
+            console.log('ERROR: User account has been disabled');
+            showError('This account has been disabled');
         } else {
-            // For all other errors, still show the generic invalid message
+            // Log unknown errors for debugging
+            console.log('Unknown error code:', error.code);
             showError('Invalid Username or Password try again');
         }
     }
 });
 
 // Forgot password / Reset password functionality
-forgotPasswordLink.addEventListener('click', async function(e) {
-    e.preventDefault();
-    
-    const email = document.getElementById('username').value.trim();
-    
-    if (!email) {
-        showError('Please enter your email address in the username field first.');
-        return;
-    }
+const forgotPasswordLink = document.getElementById('forgotPassword');
+if (forgotPasswordLink) {
+    forgotPasswordLink.addEventListener('click', async function(e) {
+        e.preventDefault();
+        
+        const emailInput = document.getElementById('email');
+        if (!emailInput) {
+            showError('Email input field not found.');
+            return;
+        }
+        
+        const email = emailInput.value.trim();
+        
+        if (!email) {
+            showError('Please enter your email address first.');
+            return;
+        }
     
     if (!auth) {
         showError('Firebase is not configured. Please check your configuration.');
@@ -172,22 +207,16 @@ forgotPasswordLink.addEventListener('click', async function(e) {
     
     try {
         await auth.sendPasswordResetEmail(email);
+        console.log('Password reset email sent successfully');
         showSuccess('Password reset email sent! Check your inbox.');
     } catch (error) {
-        console.error('Password reset error:', error);
+        console.error('Password reset error:', error.code, error.message);
+        resetButton();
         
-        switch(error.code) {
-            case 'auth/user-not-found':
-                showError('No account found with this email.');
-                break;
-            case 'auth/invalid-email':
-                showError('Please enter a valid email address.');
-                break;
-            case 'auth/network-request-failed':
-                showError('Network error. Check your internet connection.');
-                break;
-            default:
-                showError('Failed to send reset email. Please try again.');
+        if (error.code === 'auth/network-request-failed') {
+            showError('Network error. Check your internet connection.');
+        } else {
+            showError('Failed to send reset email. Please try again.');
         }
     }
 });
