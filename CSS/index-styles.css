@@ -204,67 +204,21 @@ body::before {
     border-radius: 16px;
     font-size: 16px;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    background-color: rgba(255, 255, 255, 0.05);
+    background-color: rgba(255, 255, 255, 0.1); /* 10% transparency */
     font-family: inherit;
     color: #ffffff;
 }
 
 .form-group input::placeholder {
-    color: #64748b;
+    color: rgba(255, 255, 255, 0.5);
 }
 
 .form-group input:focus {
     outline: none;
     border-color: #3b82f6;
-    background-color: rgba(255, 255, 255, 0.08);
+    background-color: rgba(255, 255, 255, 0.15);
     box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2);
     transform: scale(1.01);
-}
-
-.password-wrapper {
-    position: relative;
-}
-
-.password-toggle {
-    position: absolute;
-    right: 16px;
-    top: 50%;
-    transform: translateY(-50%);
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    color: #64748b;
-    padding: 8px;
-    transition: all 0.3s ease;
-    border-radius: 50%;
-    z-index: 10;
-    width: 36px;
-    height: 36px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    user-select: none;
-    -webkit-user-select: none;
-    -webkit-tap-highlight-color: transparent;
-}
-
-.password-toggle:hover {
-    color: #3b82f6;
-    background-color: rgba(59, 130, 246, 0.15);
-}
-
-.password-toggle:active {
-    transform: translateY(-50%) scale(0.95);
-}
-
-.password-wrapper {
-    position: relative;
-    display: block;
-}
-
-.form-group input[type="password"],
-.form-group input[type="text"]#password {
-    padding-right: 56px !important;
 }
 
 .login-btn {
