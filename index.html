@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="author" content="toothless.dev">
+    <meta name="copyright" content="toothless. All rights reserved.">
+    <meta name="description" content="Secure server authentication portal for Lazmedia Crew. Access your protected resources with confidence.">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#667eea">
+    <title>Secure Login | Lazmedia Server Authentication</title>
+    <link rel="icon" type="image/png" href="Assets/Logo-matrix-a.png">
+    <link rel="stylesheet" href="CSS/index-styles.css">
+</head>
+
+<body>
+    <header>
+        <div class="site-header">
+            <div class="header-content">
+                <img src="Assets/Logo-matrix-a.png" class="site-logo" alt="Lazmedia Logo">
+                <span class="site-title">Secure Server Portal - Lazmedia Crew</span>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="login-container">
+            <div class="login-card">
+                <h2 class="login-title">Welcome Back</h2>
+                <p class="login-subtitle">Sign in to access your secure server dashboard</p>
+                <form class="login-form" id="authForm">
+                    <div class="form-group">
+                        <label for="username">Email Address</label>
+                        <input type="email" id="username" name="username" placeholder="Enter your email address" required autocomplete="username">
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <div class="password-wrapper">
+                            <input type="password" id="password" name="password" placeholder="Enter your password" required autocomplete="current-password">
+                            <button type="button" class="password-toggle" id="togglePassword" aria-label="Toggle password visibility">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    <button type="submit" class="login-btn">Sign In Securely</button>
+                    <div class="form-footer">
+                        <a href="#" class="forgot-password">Forgot your password?</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
+    
+    <!-- Initialize Firebase and our app -->
+    <script src="JS/firebase.js"></script>
+    <script src="JS/index.js"></script>
+</body>
+
+</html>
